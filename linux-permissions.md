@@ -79,5 +79,3 @@ sudo userdel testuser
 - **Use `ls -l` to check permissions of files.**
 - **`chmod` for changing permissions, `chown` for changing ownership.**
 
-✅ **Practice:** Try creating files, changing permissions, switching users, and experimenting with ownership! 🚀
-
