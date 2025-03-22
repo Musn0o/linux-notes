@@ -1,81 +1,79 @@
-**Linux File Permissions & Ownership Notes**
+# 📌 Linux Notes: Essential Commands & Concepts
 
-### **Understanding File Permissions**
-Each file and directory in Linux has a **set of permissions** assigned to it, which determine who can **read (r)**, **write (w)**, or **execute (x)** it.
+## 📂 File & Directory Management
+- `ls` → List files in a directory
+- `ls -l` → Detailed list with permissions
+- `ls -a` → Show hidden files
+- `mkdir folder_name` → Create a new directory
+- `rm file_name` → Delete a file
+- `rm -r folder_name` → Delete a folder and its contents
+- `mv old_name new_name` → Rename or move a file
+- `cp source destination` → Copy a file or directory
 
-#### **Permission Format:**
-A file's permissions are displayed as:
-```bash
--rwxr--r--  1 user user 1234 Mar 22 10:00 file.txt
-```
-- First character (`-` or `d`): Indicates **file (-)** or **directory (d)**
-- Next **3 characters** (`rwx`): **Owner’s** permissions
-- Next **3 characters** (`r--`): **Group’s** permissions
-- Last **3 characters** (`r--`): **Others'** permissions
+## 🔑 File Permissions & Ownership
+- **Permission Structure:** `rwxrwxrwx`
+  - `r` (Read) → View file contents
+  - `w` (Write) → Modify file contents
+  - `x` (Execute) → Run file as a program/script
+- **Change Permissions:**
+  - `chmod 600 file` → Owner: Read/Write
+  - `chmod 644 file` → Owner: Read/Write, Others: Read
+  - `chmod 700 file` → Owner: Read/Write/Execute
+  - `chmod 755 file` → Owner: All, Others: Read/Execute
+- **Numeric Values:**
+  - `4` → Read, `2` → Write, `1` → Execute
+  - Example: `chmod 754 file` (Owner: `rwx`, Group: `r`, Others: `r`)
+- **Ownership:**
+  - `chown new_owner file` → Change file owner
+  - `chgrp new_group file` → Change group ownership
 
-#### **What Each Permission Means**
-| Permission | File Meaning | Directory Meaning |
-|------------|----------------------|-------------------------|
-| **r (read)** | View file content | List directory (`ls`) |
-| **w (write)** | Modify file content | Create/delete files in dir |
-| **x (execute)** | Run as a program | Enter directory (`cd`) |
+## 👤 User Management
+- `whoami` → Check current user
+- `id` → Show user ID and groups
+- `sudo adduser newuser` → Add a new user
+- `sudo deluser user` → Remove a user
+- `sudo usermod -aG group_name user` → Add user to a group
 
-### **Changing Permissions with `chmod`**
-#### **Symbolic Method:**
-Modify permissions using `u` (user), `g` (group), `o` (others), `a` (all):
-```bash
-chmod u+x file.txt   # Give execute to user (owner)
-chmod g-w file.txt   # Remove write from group
-chmod o+r file.txt   # Allow others to read
-chmod a+x script.sh  # Give execute to everyone
-```
+## 🛠 Automating Git with Cron Jobs
+- **Setting up automation:**
+  - `crontab -e` → Edit cron jobs
+  - Example job (auto-push changes at 22:00 daily):
+    ```
+    0 22 * * * cd ~/Documents/daily-ai-journal && git add . && git commit -m "Auto update journal" && git push origin main >> ~/cron_git_log.txt 2>&1
+    ```
+  - Check logs with `cat ~/cron_git_log.txt`
 
-#### **Numeric Method:**
-Each permission has a numeric value:
-- `r` = **4**, `w` = **2**, `x` = **1**
-- Sum them up to define permissions:
-  - `rwx` (4+2+1) = **7**
-  - `rw-` (4+2+0) = **6**
-  - `r--` (4+0+0) = **4**
+## 🌟 Git Workflow (Local to GitHub)
+1️⃣ **Initialize Git:**
+   ```bash
+   git init
+   git branch -m main  # Rename 'master' to 'main'
+   ```
+2️⃣ **Connect to GitHub:**
+   ```bash
+   git remote add origin git@github.com:USERNAME/REPOSITORY.git
+   ```
+3️⃣ **Push Changes:**
+   ```bash
+   git add .
+   git commit -m "Your commit message"
+   git push origin main
+   ```
+4️⃣ **Fixing Push Errors:**
+   ```bash
+   git pull --rebase origin main
+   git push origin main
+   ```
+5️⃣ **Deleting Files from GitHub:**
+   ```bash
+   git rm file_name
+   git commit -m "Removed old file"
+   git push origin main
+   ```
 
-Examples:
-```bash
-chmod 755 script.sh  # Owner (rwx), Group (r-x), Others (r-x)
-chmod 644 file.txt   # Owner (rw-), Group (r--), Others (r--)
-chmod 600 private.txt  # Only owner can read/write
-```
+---
 
-### **Changing Ownership with `chown`**
-#### **Change File Owner:**
-```bash
-chown newuser file.txt
-```
-#### **Change Owner & Group:**
-```bash
-chown newuser:newgroup file.txt
-```
-#### **Change Ownership for a Directory & Its Contents:**
-```bash
-chown -R newuser:newgroup mydir/
-```
+This document will be **updated over time** as we explore more Linux concepts. 🚀
 
-### **Managing Users for Testing**
-#### **Create a New User:**
-```bash
-sudo useradd testuser
-```
-#### **Switch to the New User:**
-```bash
-su - testuser
-```
-#### **Delete the User:**
-```bash
-sudo userdel testuser
-```
 
-### **Final Notes:**
-- **Directories need `x` permission to `cd` into them.**
-- **Scripts need `x` permission to execute (`chmod +x script.sh`).**
-- **Use `ls -l` to check permissions of files.**
-- **`chmod` for changing permissions, `chown` for changing ownership.**
 
